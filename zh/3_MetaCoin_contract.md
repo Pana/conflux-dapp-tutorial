@@ -198,3 +198,6 @@ $ solc -o outputDirectory --bin --ast-compact-json --asm sourceFile.sol
 
 本合约实例实现了一个简单的代币，合约的 owner 可以给任何人 `mint` 新的 token，任何人可以将自己的 token `transfer` 给其他人。
 
+## 参考
+
+* [solidity-by-example](https://solidity-by-example.org/)

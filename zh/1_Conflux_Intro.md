@@ -1,6 +1,6 @@
 # Conflux introduction
 
-[Conflux](https://confluxnetwork.org/) 是一个核心成员来自清华大学姚班的强大团队所打造的一个兼容 EVM 的高性能，完全去中心化公链。
+[Conflux](https://confluxnetwork.org/) 是一个核心成员来自清华大学姚班的优秀团队所打造的一个兼容 EVM 的高性能，完全去中心化公链。
 
 <img src="https://github.com/Conflux-Chain/design-resource-lab/blob/master/0.%20CONFLUX%20LOGO/Stacked%20lockup/with%20space/Conflux_with%20space_PNG/Stacked_with%20space-1.png?raw=true" width="800px"></img>
 
