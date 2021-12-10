@@ -10,7 +10,7 @@ contract MetaCoin {
     // A `mapping` is essentially a hash table data structure.
     // This `mapping` assigns an unsigned integer (the token balance) to an address (the token holder).
     // Learn more: https://solidity.readthedocs.io/en/v0.5.10/types.html#mapping-types
-    mapping (address => uint) public balances;
+    mapping (address => uint) private balances;
 
     // Events allow for logging of activity on the blockchain.
     // Conflux clients can listen for events in order to react to contract state changes.
@@ -19,7 +19,7 @@ contract MetaCoin {
 
     // Initializes the contract's data, setting the `owner`
     // to the address of the contract creator.
-    constructor() public {
+    constructor() {
         // All smart contracts rely on external transactions to trigger its functions.
         // `msg` is a global variable that includes relevant data on the given transaction,
         // such as the address of the sender and the CFX value included in the transaction.
@@ -60,5 +60,10 @@ contract MetaCoin {
     // Query balance of one account
     function balanceOf(address account) public view returns (uint) {
         return balances[account];
+    }
+
+    // Enable anyone claim 100 MetaCoin from faucet
+    function faucet() public {
+        balances[msg.sender] += 100;
     }
 }

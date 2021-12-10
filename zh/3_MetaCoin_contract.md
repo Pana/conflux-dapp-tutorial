@@ -80,59 +80,83 @@ contract SimpleStorage {
 现在我们来看一个稍微复杂一点的例子：Subcurrency。该例子实现了一个加密货币，该合约只允许创建者发行新的货币，但任何人可以通过发送交易的形式，将自己的 Coin 发给其他人。
 
 ```js
-// SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.4;
+//SPDX-License-Identifier: MIT
+pragma solidity ^0.7.0;
 
-contract Coin {
-    // The keyword "public" makes variables
-    // accessible from other contracts
-    address public minter;
-    mapping (address => uint) public balances;
+contract MetaCoin {
+    // An `address` is comparable to an email address - it's used to identify an account on Conflux.
+    // Addresses can represent a smart contract or an external (user) accounts.
+    // Learn more: https://solidity.readthedocs.io/en/v0.5.10/types.html#address
+    address public owner;
 
-    // Events allow clients to react to specific
-    // contract changes you declare
-    event Sent(address from, address to, uint amount);
+    // A `mapping` is essentially a hash table data structure.
+    // This `mapping` assigns an unsigned integer (the token balance) to an address (the token holder).
+    // Learn more: https://solidity.readthedocs.io/en/v0.5.10/types.html#mapping-types
+    mapping (address => uint) private balances;
 
-    // Constructor code is only run when the contract
-    // is created
+    // Events allow for logging of activity on the blockchain.
+    // Conflux clients can listen for events in order to react to contract state changes.
+    // Learn more: https://solidity.readthedocs.io/en/v0.5.10/contracts.html#events
+    event Transfer(address from, address to, uint amount);
+
+    // Initializes the contract's data, setting the `owner`
+    // to the address of the contract creator.
     constructor() {
-        minter = msg.sender;
+        // All smart contracts rely on external transactions to trigger its functions.
+        // `msg` is a global variable that includes relevant data on the given transaction,
+        // such as the address of the sender and the CFX value included in the transaction.
+        // Learn more: https://solidity.readthedocs.io/en/v0.5.10/units-and-global-variables.html#block-and-transaction-properties
+        owner = msg.sender;
     }
 
-    // Sends an amount of newly created coins to an address
-    // Can only be called by the contract creator
+    // Creates an amount of new tokens and sends them to an address.
     function mint(address receiver, uint amount) public {
-        require(msg.sender == minter);
+        // `require` is a control structure used to enforce certain conditions.
+        // If a `require` statement evaluates to `false`, an exception is triggered,
+        // which reverts all changes made to the state during the current call.
+        // Learn more: https://solidity.readthedocs.io/en/v0.5.10/control-structures.html#error-handling-assert-require-revert-and-exceptions
+
+        // Only the contract owner can call this function
+        require(msg.sender == owner, "You are not the owner.");
+
+        // Ensures a maximum amount of tokens
+        require(amount < 1e60, "Maximum issuance succeeded");
+
+        // Increases the balance of `receiver` by `amount`
         balances[receiver] += amount;
     }
 
-    // Errors allow you to provide information about
-    // why an operation failed. They are returned
-    // to the caller of the function.
-    error InsufficientBalance(uint requested, uint available);
+    // Sends an amount of existing tokens from any caller to an address.
+    function transfer(address receiver, uint amount) public {
+        // The sender must have enough tokens to send
+        require(amount <= balances[msg.sender], "Insufficient balance.");
 
-    // Sends an amount of existing coins
-    // from any caller to an address
-    function send(address receiver, uint amount) public {
-        if (amount > balances[msg.sender])
-            revert InsufficientBalance({
-                requested: amount,
-                available: balances[msg.sender]
-            });
-
+        // Adjusts token balances of the two addresses
         balances[msg.sender] -= amount;
         balances[receiver] += amount;
-        emit Sent(msg.sender, receiver, amount);
+
+        // Emits the event defined earlier
+        emit Transfer(msg.sender, receiver, amount);
+    }
+
+    // Query balance of one account
+    function balanceOf(address account) public view returns (uint) {
+        return balances[account];
+    }
+
+    // Enable anyone claim 100 MetaCoin from faucet
+    function faucet() public {
+        balances[msg.sender] += 100;
     }
 }
 ```
 
 1. 代码的第一行和第二行声明了该代码的 License 和使用的 Solidity 版本
-2. 然后使用 `contract` 关键词声明了一个合约类 `Coin`
-3. Coin 类定义了两个属性(状态变量): `minter`, `balances`
-4. Coin 类还定了三个方法：`constructor`, `mint`, `send`
-5. Coin 类还定义了一个 event：`Sent`
-6. Coin 类还定义了一个 error：`InsufficientBalance`
+2. 然后使用 `contract` 关键词声明了一个合约类 `MetaCoin`
+3. MetaCoin 类定义了两个属性(状态变量): `owner`, `balances`
+4. MetaCoin 类还定了四个方法：`constructor`, `mint`, `transfer`, `faucet`
+5. MetaCoin 类还定义了一个 event：`Transfer` 用于记录所有的转移事件
+6. MetaCoin 类还定义了一个查询方法: `balanceOf` 用于查询用户的 MetaCoin 余额
 
 以上就是合约的基本结构，关于 Solidity 语言的细节：数据类型，表达式，控制，函数等等，可以参看 Solidity 的 [Language Description](https://docs.soliditylang.org/en/v0.8.10/layout-of-source-files.html)
 

@@ -1,4 +1,4 @@
-[
+const metaCoinAbi = [
   {
     "inputs": [],
     "stateMutability": "nonpayable",
@@ -104,4 +104,4 @@
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
+];

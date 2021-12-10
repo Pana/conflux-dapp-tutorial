@@ -1,0 +1,24 @@
+{
+  "name": "@conflux-dev/conflux-dapp-tutorial",
+  "version": "1.0.0",
+  "description": "A detail tutorial of developing Dapp on Conflux",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pana/conflux-dapp-tutorial.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pana/conflux-dapp-tutorial/issues"
+  },
+  "homepage": "https://github.com/Pana/conflux-dapp-tutorial#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "js-conflux-sdk": "^2.0.0-beta.10"
+  }
+}
